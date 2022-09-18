@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    {% for post in posts %}
+        <div class="card bg-dark text-white mb-3" style="max-width: 540px;">
+            <div class="category">
+                <a class="bg-secondary" href="#">{{ post.category.name }}</a>
+            </div>
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              <img src="{{ post.cover_image.url }}" class="card-img" alt="...">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.content|slice:":200"  }}..........<a href="{% url 'post-detail' post.pk %}">Read more</a></p>
+                <p class="card-text"><small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small></p>
+                <div>
+                    <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-approve' post.pk %}">Approve</a>
+                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' post.id %}">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+    {% endfor %}
+{% endblock content %}

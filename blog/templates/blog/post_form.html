@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="jumbotron bg-none">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <legend class="text-white mb-4">Blog Post</legend>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="container text-white">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+            <div class="form-group">
+                <button class="btn btn-info" type="submit">Post</button>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
+
+{% endblock content %}

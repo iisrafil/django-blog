@@ -1,0 +1,72 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+<div class="jumbotron bg-none">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <h1 class="text-white">{{category.name}} ({{ posts.paginator.count }})</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="se-pre-con"></div>
+<div class="container-fluid mt-5">
+    <div class="row">
+      <div class="grid" data-columns>
+    {% for post in posts %}
+        <div class="card border-one bg-dark text-white text-center">
+            <div class="category">
+                <a class="bg-secondary" href="#">{{ post.category.name }}</a>
+            </div>
+            <div class="bg-over">
+                <img class="card-img border-two" src="{{ post.cover_image.url }}">
+                <a class="link-over" href="{% url 'post-detail' post.id %}"></a>
+                <div class="card-blog-body">
+                    <small><i class="icon-clock icons mr-2"></i>{{ post.date_posted|date:"F d, Y" }}</small>
+                    <h4 class="mt-4">{{ post.title }}</h4><br>
+                    <p class="card-text mb-5">{{ post.content|slice:":100"  }}..........<a href="{% url 'post-detail' post.id %}">Read more</a></p>
+                    <a class="author" href="{% url 'user-posts' post.author.username %}">
+                        <img class="avatar-sm img-fluid rounded-circle" src="{{post.author.profile.image.url}}">
+                        <div>{{ post.author.username }}</div>
+                        <div class="vbadge">
+                        </div>
+                    </a>
+                    <div class="card-like">
+                        <a href="#" >
+                        <div class="heartguest"></div>
+                        </a>
+                        <div class="card-count" id="likeCount17">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+          </div>
+    </div>
+</div>
+
+<footer class="blog-footer">
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+    <div class="text-muted foottxt"><p>© 2021 Reserved By <a href="https://me.israfil.xyz">Israfil</a></p></div>
+
+</footer>
+
+{% endblock content %}

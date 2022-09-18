@@ -1,0 +1,88 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
+<div class="se-pre-con"></div>
+<div class="container-fluid mt-5">
+    <div class="row">
+      <div class="grid" data-columns>
+          <div class="card border-one bg-dark text-white text-center">
+            <iframe
+	src="https://viewm.moonicorn.network/#%7B%22options%22%3A%7B%22publisherAddr%22%3A%220x67D7Dde35dF77bD8F2D2BEc610fc3B3eb05A0908%22%2C%22whitelistedTokens%22%3A%5B%220x6B175474E89094C44Da98b954EedeAC495271d0F%22%5D%2C%22whitelistedType%22%3A%22legacy_300x250%22%2C%22randomize%22%3Atrue%2C%22targeting%22%3A%5B%5D%2C%22width%22%3A%22300%22%2C%22height%22%3A%22250%22%2C%22minPerImpression%22%3A%220%22%2C%22fallbackUnit%22%3Anull%2C%22marketSlot%22%3A%22QmXkxznsixG5wCG5N3Zt7SosRofmbMgmKN9VcskphSqR1t%22%7D%7D"
+	width="300"
+	height="250"
+	scrolling="no"
+	frameborder="0"
+	style="border: 0;"
+	onload="window.addEventListener('message', function(ev) {
+		if (ev.data.hasOwnProperty('adexHeight') && ('https://viewm.moonicorn.network' === ev.origin)) {
+			for (let f of document.getElementsByTagName('iframe')) {
+				if (f.contentWindow === ev.source) {
+					f.height = ev.data.adexHeight;
+				}
+			}
+		}
+	}, false)"
+></iframe>
+        </div>
+        {% for post in posts %}
+        <div class="card border-one bg-dark text-white text-center">
+            <div class="category">
+                <a class="bg-secondary" href="{% url 'category-post' post.category.pk %}">{{ post.category.name }}</a>
+            </div>
+            <div class="bg-over">
+                <img class="card-img border-two" src="{{ post.cover_image.url }}">
+                <a class="link-over" href="{% url 'post-detail' post.id %}"></a>
+                <div class="card-blog-body">
+                    <small><i class="icon-clock icons mr-2"></i>{{ post.date_posted|date:"F d, Y" }}</small>
+                    <h4 class="mt-4">{{ post.title }}</h4><br>
+                    <p class="card-text mb-5">{{ post.content|slice:":100"  }}..........<a href="{% url 'post-detail' post.pk %}">Read more</a></p>
+                    <a class="author" href="{% url 'user-posts' post.author.username %}">
+                        <img class="avatar-sm img-fluid rounded-circle" src="{{post.author.profile.image.url}}">
+                        <div>{{ post.author.username }}</div>
+                        <div class="vbadge">
+                            <img src="{% static 'blog/images/patch-check-fill-w.svg' %}" alt="Verified" alt="Verified" width="14" height="14" title="Verified">
+                        </div>
+                    </a>
+                    <div class="card-like">
+                        <a href="#" >
+                        <div class="heartguest"></div>
+                        </a>
+                        <div class="card-count" id="likeCount17">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+</div>
+
+<footer class="blog-footer">
+
+
+      {% if posts.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ posts.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in posts.paginator.page_range %}
+        {% if posts.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > posts.number|add:'-3' and num < posts.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ posts.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ posts.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+
+<div class="text-muted foottxt"><p>© 2021 Reserved By <a href="https://me.israfil.xyz">Summum & Israfil</a></p></div>
+</footer>
+
+
+
+{% endblock content %}

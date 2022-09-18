@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="keywords" content="israfil,blog,youtube,general,design,graphics,summum" />
+        <meta name="author" content="eshuco" />
+        <meta name="robots" content="noindex" />
+        <meta name="description" content="This is a blog site by israfil islam and reafat summum">
+        <link rel="icon" type="image/png" href="{% static 'blog/images/logo.png' %}">
+        <meta property="fb:app_id"              content="1972488339594161" />
+        {% if title %}
+            <title>Babble - {{ title }}</title>
+        {% else %}
+            <title>Babble</title>
+        {% endif %}
+        <link href="{% static 'blog/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'blog/css/instant.css' %}" rel="stylesheet">
+        <link href="{% static 'blog/css/simple-line-icons.css' %}" rel="stylesheet">
+        <script data-ad-client="ca-pub-7872488949531695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    </head>
+    <body class="bg-instant">
+        <nav class="navbar navbar-expand-md navbar-dark bg-nav">
+    <a class="navbar-brand" href="{% url 'blog-home' %}">
+        <img src="{% static 'blog/images/logo.png' %}" class="d-inline-block align-top" alt="">
+    </a>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsDefault">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link mr-3 d-none d-md-block" href="{% url 'blog-home' %}" data-toggle="tooltip" data-placement="bottom" title="Home"><i class="icon-home icons nav-icon"></i></a>
+                <a class="nav-link d-md-none" href="{% url 'blog-home' %}"><i class="icon-home icons"></i> Home</a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="nav-link mr-3 d-none d-md-block" href="{% url 'category' %}" data-toggle="tooltip" data-placement="bottom" title="Categories"><i class="icon-grid icons nav-icon"></i></a>
+                <a class="nav-link d-md-none" href="{% url 'category' %}"><i class="icon-grid icons"></i> Categories</a>
+            </li>
+
+            <li class="nav-item">
+                <span data-toggle="modal" data-target="#searchModal">
+                    <a class="nav-link mr-3 d-none d-md-block" href="#" data-toggle="tooltip" data-placement="bottom" title="Search"><i class="icon-magnifier icons nav-icon"></i></a>
+                    <a class="nav-link d-md-none" href="#"><i class="icon-magnifier icons"></i> Search</a>
+                </span>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="avatar-xs img-fluid rounded-circle" src="{{ user.profile.image.url }}">
+                    {{ user.username }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                    <a class="dropdown-item" href="{% url 'post-create' %}">Add Post</a>
+                    <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                    {% if user.is_staff %}
+                    <a class="dropdown-item" href="{% url 'pending-post' %}">Pending Post</a>
+                    {% endif %}
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </li>
+            {% else %}
+                        <li class="nav-item ">
+                <a class="nav-link mr-3 d-none d-md-block" href="{% url 'login' %}" data-toggle="tooltip" data-placement="bottom" title="Login"><i class="icon-login icons nav-icon"></i></a>
+                <a class="nav-link d-md-none" href="{% url 'login' %}"><i class="icon-login icons"></i> Login</a>
+            </li>
+            {% endif %}
+                    </ul>
+    </div>
+</nav>
+        <!-- Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-body p-5">
+                <div class="row">
+                    <div class="col-10">
+                        <form class="form-inline" action="index.html" method="get">
+                            <div class="input-group mb-3">
+                                <input name="s" type="text" class="form-control form-control-lg" id="lgFormGroupInput" placeholder="Search" aria-describedby="button-addon2" required>
+                              <div class="input-group-append">
+                                <button type="submit" id="button-addon2" class="btn btn-outline-secondary"><i class="icon-magnifier icons"></i></button>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="close mr-3" data-dismiss="modal" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% block content %} {% endblock %}
+
+
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1972488339594161',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v10.0'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<script src="{% static 'blog/js/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'blog/js/salvattore.min.js' %}"></script>
+<script src="{% static 'blog/js/popper.min.js' %}"></script>
+<script src="{% static 'blog/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'blog/js/heart.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  	$('[data-toggle="tooltip"]').tooltip({
+        trigger : 'hover',
+        container: 'body'
+    });
+    $(".se-pre-con").fadeOut("slow");
+  });
+</script>
+
+
+            </body>
+
+</html>

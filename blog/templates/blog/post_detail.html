@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="{{object.keywords}}" />
+        <meta name="author" content="eshuco" />
+        <meta name="robots" content="noindex" />
+        <meta name="description" content="{{ object.content|slice:":200"  }}">
+        
+        <meta property="og:url"                content="https://israfil.xyz{% url 'post-detail' object.id %}" />
+        <meta property="og:type"               content="article" />
+        <meta property="og:title"              content="{{ object.title }}" />
+        <meta property="og:description"        content="{{ object.content|slice:":200"  }}" />
+        <meta property="og:image"              content="https://israfil.xyz{{ object.cover_image.url }}" />
+        <meta property="fb:app_id"              content="1972488339594161" />
+        
+        <link rel="icon" type="image/png" href="{% static 'blog/images/logo.png' %}">
+       
+            <title>Babble- {{ object.title }}</title>
+        
+        <link href="{% static 'blog/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'blog/css/instant.css' %}" rel="stylesheet">
+        <link href="{% static 'blog/css/simple-line-icons.css' %}" rel="stylesheet">
+    </head>
+    <body class="bg-instant">
+        <nav class="navbar navbar-expand-md navbar-dark bg-nav">
+    <a class="navbar-brand" href="{% url 'blog-home' %}">
+        <img src="{% static 'blog/images/logo.png' %}" class="d-inline-block align-top" alt="">
+    </a>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsDefault">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link mr-3 d-none d-md-block" href="{% url 'blog-home' %}" data-toggle="tooltip" data-placement="bottom" title="Home"><i class="icon-home icons nav-icon"></i></a>
+                <a class="nav-link d-md-none" href="{% url 'blog-home' %}"><i class="icon-home icons"></i> Home</a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="nav-link mr-3 d-none d-md-block" href="{% url 'category' %}" data-toggle="tooltip" data-placement="bottom" title="Categories"><i class="icon-grid icons nav-icon"></i></a>
+                <a class="nav-link d-md-none" href="{% url 'category' %}"><i class="icon-grid icons"></i> Categories</a>
+            </li>
+
+            <li class="nav-item">
+                <span data-toggle="modal" data-target="#searchModal">
+                    <a class="nav-link mr-3 d-none d-md-block" href="#" data-toggle="tooltip" data-placement="bottom" title="Search"><i class="icon-magnifier icons nav-icon"></i></a>
+                    <a class="nav-link d-md-none" href="#"><i class="icon-magnifier icons"></i> Search</a>
+                </span>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link mr-3 dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="avatar-xs img-fluid rounded-circle" src="{{ user.profile.image.url }}">
+                    {{ user.username }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                    <a class="dropdown-item" href="{% url 'post-create' %}">Add Post</a>
+                    <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                    {% if user.is_staff %}
+                    <a class="dropdown-item" href="{% url 'pending-post' %}">Pending Post</a>
+                    {% endif %}
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </li>
+            {% else %}
+                        <li class="nav-item ">
+                <a class="nav-link mr-3 d-none d-md-block" href="{% url 'login' %}" data-toggle="tooltip" data-placement="bottom" title="Login"><i class="icon-login icons nav-icon"></i></a>
+                <a class="nav-link d-md-none" href="{% url 'login' %}"><i class="icon-login icons"></i> Login</a>
+            </li>
+            {% endif %}
+                    </ul>
+    </div>
+</nav>
+        <!-- Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-body p-5">
+                <div class="row">
+                    <div class="col-10">
+                        <form class="form-inline" action="index.html" method="get">
+                            <div class="input-group mb-3">
+                                <input name="s" type="text" class="form-control form-control-lg" id="lgFormGroupInput" placeholder="Search" aria-describedby="button-addon2" required>
+                              <div class="input-group-append">
+                                <button type="submit" id="button-addon2" class="btn btn-outline-secondary"><i class="icon-magnifier icons"></i></button>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="close mr-3" data-dismiss="modal" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+<div class="container mt-5">
+    <div class="row">
+  <div class="col-md-8">
+            <div class="card">
+
+                <img class="card-img-top img-fluid" src="{{ object.cover_image.url }}">
+
+              {% if object.author == user %}
+						  <div>
+							<a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+							<a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+						  </div>
+              {% endif %}
+              {% if object.public == False %}
+                  <div>
+                    <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-approve' object.pk %}">Approve</a>
+                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+                  </div>
+              {% endif %}
+                <div class="card-body">
+                    <div class="list-item mb-3">
+                        <div class="list-left">
+                            <a href="{% url 'user-posts' object.author.username %}">
+								<img class="avatar img-fluid rounded-circle" src="{{ object.author.profile.image.url }}">
+                            </a>
+                        </div>
+                        <div class="list-body">
+                            <div class="text-ellipsis">
+                                <a class="nocolor" href="{% url 'user-posts' object.author.username %}">{{ object.author.username }}</a>
+                                <small class="text-muted time">{{ object.date_posted|date:"F d, Y" }}</small>
+                            </div>
+                            <div class="text-ellipsis">
+                                <small class="text-muted time"><a href="#">
+                                    {{ object.category.name }}
+                                </a></small>
+                            </div>
+                        </div>
+                    </div>
+                    <h1>{{ object.title }}</h1>
+                    <p style='white-space: pre-line;'>{{ object.content }}</p>
+
+					<div class="card-body card-border">
+                    <div class="row">
+                        <div class="col like ml-3 lesspadding">
+                            <a href="#" >
+                                <div class="heartguest"></div>
+                            </a>
+                            <div class="likeCount" id="likeCount18">0</div>
+                        </div>
+                        <div class="col lesspadding">
+                            <a role="button" class="btn btn-face btn-sm share" href="https://www.facebook.com/sharer/sharer.php?u=https://israfil.xyz{% url 'post-detail' object.id %}" target="_blank"><i class="icon-social-facebook icons"></i> <span class="d-none d-md-inline-block">Share</span></a>
+                        </div>
+                        <div class="col lesspadding">
+                            <a role="button" class="btn btn-twit btn-sm share" href="https://twitter.com/share?url=https://israfil.xyz{% url 'post-detail' object.id %}" target="_blank"><i class="icon-social-twitter icons"></i> <span class="d-none d-md-inline-block">Share</span></a>
+                        </div>
+
+						</div>
+						</div>
+                </div>
+            </div>
+    </div>
+    <div class="col-md-4">
+            <div class="row mb-5">
+                <div class="col">
+                                <a role="button" class="btn btn-block btn-arrow border-one" href="{% url 'blog-home' %}" data-toggle="tooltip" data-placement="bottom" title="Previous">
+                    <i class="icon-arrow-left icons"></i>
+                </a>
+                                </div>
+                <div class="col">
+                                <a role="button" class="btn btn-block btn-arrow border-one" href="{% url 'blog-home' %}" data-toggle="tooltip" data-placement="bottom" title="Random">
+                    <i class="icon-shuffle icons"></i>
+                </a>
+                                </div>
+                <div class="col">
+                                </div>
+            </div>
+                <div class="card border-one bg-dark text-white">
+                    <iframe
+                        src="https://viewm.moonicorn.network/#%7B%22options%22%3A%7B%22publisherAddr%22%3A%220x67D7Dde35dF77bD8F2D2BEc610fc3B3eb05A0908%22%2C%22whitelistedTokens%22%3A%5B%220x6B175474E89094C44Da98b954EedeAC495271d0F%22%5D%2C%22whitelistedType%22%3A%22legacy_300x250%22%2C%22randomize%22%3Atrue%2C%22targeting%22%3A%5B%5D%2C%22width%22%3A%22300%22%2C%22height%22%3A%22250%22%2C%22minPerImpression%22%3A%220%22%2C%22fallbackUnit%22%3Anull%2C%22marketSlot%22%3A%22QmXkxznsixG5wCG5N3Zt7SosRofmbMgmKN9VcskphSqR1t%22%7D%7D"
+                        width="300"
+                        height="250"
+                        scrolling="no"
+                        frameborder="0"
+                        style="border: 0;"
+                        onload="window.addEventListener('message', function(ev) {
+                            if (ev.data.hasOwnProperty('adexHeight') && ('https://viewm.moonicorn.network' === ev.origin)) {
+                                for (let f of document.getElementsByTagName('iframe')) {
+                                    if (f.contentWindow === ev.source) {
+                                        f.height = ev.data.adexHeight;
+                                    }
+                                }
+                            }
+                        }, false)"
+                    ></iframe>
+                </div>
+            {% for post in posts %}
+                <div class="card border-one bg-dark text-white">
+                    <img class="card-img border-one" src="{{ post.cover_image.url }}">
+                    <div class="card-img-overlay bg-over">
+                        <a class="link-over" href="{% url 'post-detail' post.pk %}"></a>
+                        <h4 class="bottom-txt">
+                            {{ post.title }}
+                        </h4>
+                        <a class="author" href="{% url 'user-posts' post.author.username %}">
+                            <img class="avatar-sm img-fluid rounded-circle" src="{{post.author.profile.image.url}}">
+                            <div>{{ post.author.username }}</div>
+                        </a>
+                        <small class="text-muted card-date">{{ post.date_posted|date:"F d, Y" }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+
+    </div>
+
+
+    </div>
+</div>
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1972488339594161',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v10.0'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<script src="{% static 'blog/js/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'blog/js/salvattore.min.js' %}"></script>
+<script src="{% static 'blog/js/popper.min.js' %}"></script>
+<script src="{% static 'blog/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'blog/js/heart.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  	$('[data-toggle="tooltip"]').tooltip({
+        trigger : 'hover',
+        container: 'body'
+    });
+    $(".se-pre-con").fadeOut("slow");
+  });
+</script>
+
+
+            </body>
+
+</html>
