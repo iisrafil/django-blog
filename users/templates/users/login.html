@@ -1,0 +1,51 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="jumbotron bg-none">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <h1 class="display-4 text-white">Login</h1>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="container text-white">
+    <div class="row">
+        <div class="col-md-4">
+            <form class="form-horizontal" role="form" method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                    Dont have an account?                    <a href="{% url 'register' %}"><strong> Sign up</strong></a>
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                    Forgot Your Password?                    <a href="{% url 'password_reset' %}"><strong> Click Here</strong></a>
+                    </label>
+                </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btnpoint">
+                        Login                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1">
+            <div class="ordiv">
+            </div>
+        </div>
+        <div class="col-md-4 pt-4">
+             <div class="sociallogin mt-4 mb-3">
+                <a role="button" class="btn btn-face social" href="#" ><i class="icon-social-facebook icons"></i>Login with Facebook</a>
+            </div>
+             <div class="sociallogin">
+                <a role="button" class="btn btn-google social" href="#" ><i class="icon-social-google icons"></i>Login with Google+</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

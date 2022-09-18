@@ -1,0 +1,37 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="jumbotron bg-none">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <h1 class="display-4 text-white">Signup</h1>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="container text-white">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal" role="form" method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btnpoint">
+                        Login                    </button>
+                </div>
+            </form>
+			<div class="form-group">
+                <div class="checkbox">
+                    <label>
+                    Already have an account? <a href="{% url 'login' %}"><strong> Login </strong></a>
+                    </label>
+                </div>
+
+                </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}
